@@ -1,0 +1,6 @@
+{
+  "name": "Invoice Generator",
+  "description": "Create, customize, and download professional invoices instantly with live previews, custom branding, multi-currency support, and invoice management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

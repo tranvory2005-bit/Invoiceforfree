@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@layer utilities {
+  @media print {
+    body {
+      background-color: white !important;
+      color: black !important;
+      font-size: 12pt !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    header,
+    nav,
+    .print\:hidden {
+      display: none !important;
+    }
+
+    #invoice-print-area {
+      box-shadow: none !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      border-radius: 0 !important;
+    }
+
+    /* Keep background colors in print if supported by browser settings */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+}
