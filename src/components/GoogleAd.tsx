@@ -31,10 +31,18 @@ export const GoogleAd: React.FC<GoogleAdProps> = ({
 
   // Allow storing custom Publisher ID in localStorage for easy testing without rebuilds
   const [localPublisherId, setLocalPublisherId] = useState<string>(() => {
-    return localStorage.getItem('google_adsense_pub_id') || '';
+    try {
+      return localStorage.getItem('google_adsense_pub_id') || '';
+    } catch {
+      return '';
+    }
   });
   const [localSlotId, setLocalSlotId] = useState<string>(() => {
-    return localStorage.getItem('google_adsense_slot_id') || slot;
+    try {
+      return localStorage.getItem('google_adsense_slot_id') || slot;
+    } catch {
+      return slot;
+    }
   });
 
   const [showConfig, setShowConfig] = useState(false);
@@ -92,8 +100,12 @@ export const GoogleAd: React.FC<GoogleAdProps> = ({
 
   const handleSaveConfig = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('google_adsense_pub_id', localPublisherId);
-    localStorage.setItem('google_adsense_slot_id', localSlotId);
+    try {
+      localStorage.setItem('google_adsense_pub_id', localPublisherId);
+      localStorage.setItem('google_adsense_slot_id', localSlotId);
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
     setShowConfig(false);
     window.location.reload();
   };
