@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, FileCheck2, Zap, Globe, Sparkles, HelpCircle } from 'lucide-react';
+import { GoogleAd } from './GoogleAd';
 
 export const SeoFooter: React.FC = () => {
   return (
@@ -107,6 +108,11 @@ export const SeoFooter: React.FC = () => {
               </details>
             </div>
           </article>
+        </section>
+
+        {/* Footer Ad Placement */}
+        <section className="pt-4 border-t border-gray-100">
+          <GoogleAd label="Sponsored Content" />
         </section>
 
         {/* Footer Copyright */}

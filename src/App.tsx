@@ -6,6 +6,7 @@ import { InvoiceEditor } from './components/InvoiceEditor';
 import { InvoicePreview } from './components/InvoicePreview';
 import { InvoiceHistory } from './components/InvoiceHistory';
 import { SeoFooter } from './components/SeoFooter';
+import { GoogleAd } from './components/GoogleAd';
 
 const STORAGE_KEY_SAVED_INVOICES = 'invoice_generator_saved_list_v1';
 const STORAGE_KEY_CURRENT_INVOICE = 'invoice_generator_current_draft_v1';
@@ -167,8 +168,13 @@ export default function App() {
         showSaveSuccess={showSaveSuccess}
       />
 
+      {/* Top Google AdSense Banner Placement */}
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <GoogleAd label="Sponsored Advertisement" />
+      </div>
+
       {/* Main Workspace Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-2">
         
         {/* VIEW 1: EDITOR */}
         {activeTab === 'editor' && (
