@@ -4,13 +4,9 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
-  // Use repository name base path in GitHub Actions CI (e.g. /Invoiceforfree/) or relative './'
-  const base = process.env.GITHUB_REPOSITORY
-    ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
-    : './';
-
   return {
-    base,
+    // Relative base path ensures assets load correctly regardless of repo subpath or custom domain
+    base: './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
