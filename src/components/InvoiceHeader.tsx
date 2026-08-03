@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Invoice, InvoiceTemplateStyle } from '../types';
 import { PRESET_COLORS } from '../utils/calculator';
+import { PolicyTab } from './PolicyModal';
 
 interface InvoiceHeaderProps {
   activeTab: 'editor' | 'preview' | 'history';
@@ -27,6 +28,7 @@ interface InvoiceHeaderProps {
   onNewInvoice: () => void;
   savedCount: number;
   showSaveSuccess: boolean;
+  onOpenPolicy?: (tab: PolicyTab) => void;
 }
 
 export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
@@ -40,6 +42,7 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
   onNewInvoice,
   savedCount,
   showSaveSuccess,
+  onOpenPolicy,
 }) => {
   const handleExportJson = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(invoice, null, 2));
@@ -72,6 +75,54 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-xs print:hidden">
+      
+      {/* Top AdSense Policy Navigation Bar */}
+      {onOpenPolicy && (
+        <div className="bg-slate-900 text-slate-300 py-1 px-4 sm:px-6 lg:px-8 text-[11px] font-medium flex items-center justify-between border-b border-slate-800">
+          <div className="flex items-center gap-1.5 text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>100% Free PDF Invoice Builder • Privacy-First Local Storage</span>
+          </div>
+
+          <div className="flex items-center gap-3 sm:gap-4 font-semibold text-slate-300">
+            <button 
+              onClick={() => onOpenPolicy('privacy')}
+              className="hover:text-blue-400 transition-colors"
+            >
+              Privacy Policy
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => onOpenPolicy('terms')}
+              className="hover:text-blue-400 transition-colors"
+            >
+              Terms of Use
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => onOpenPolicy('about')}
+              className="hover:text-blue-400 transition-colors hidden sm:inline"
+            >
+              About Us
+            </button>
+            <span className="hidden sm:inline">•</span>
+            <button 
+              onClick={() => onOpenPolicy('contact')}
+              className="hover:text-blue-400 transition-colors"
+            >
+              Contact Us
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => onOpenPolicy('guide')}
+              className="hover:text-blue-400 transition-colors hidden md:inline"
+            >
+              Guide
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3 gap-3">
           

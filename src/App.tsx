@@ -7,12 +7,48 @@ import { InvoicePreview } from './components/InvoicePreview';
 import { InvoiceHistory } from './components/InvoiceHistory';
 import { SeoFooter } from './components/SeoFooter';
 import { GoogleAd } from './components/GoogleAd';
+import { PolicyModal, PolicyTab } from './components/PolicyModal';
+import { CookieBanner } from './components/CookieBanner';
 
 const STORAGE_KEY_SAVED_INVOICES = 'invoice_generator_saved_list_v1';
 const STORAGE_KEY_CURRENT_INVOICE = 'invoice_generator_current_draft_v1';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'history'>('editor');
+  const [policyModalOpen, setPolicyModalOpen] = useState(false);
+  const [policyModalTab, setPolicyModalTab] = useState<PolicyTab>('privacy');
+
+  // Handle URL hash links like #privacy-policy, #terms-of-service, #about-us, #contact-us
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#privacy-policy' || hash === '#privacy') {
+        setPolicyModalTab('privacy');
+        setPolicyModalOpen(true);
+      } else if (hash === '#terms-of-service' || hash === '#terms') {
+        setPolicyModalTab('terms');
+        setPolicyModalOpen(true);
+      } else if (hash === '#about-us' || hash === '#about') {
+        setPolicyModalTab('about');
+        setPolicyModalOpen(true);
+      } else if (hash === '#contact-us' || hash === '#contact') {
+        setPolicyModalTab('contact');
+        setPolicyModalOpen(true);
+      } else if (hash === '#invoicing-guide' || hash === '#guide') {
+        setPolicyModalTab('guide');
+        setPolicyModalOpen(true);
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  const handleOpenPolicy = (tab: PolicyTab) => {
+    setPolicyModalTab(tab);
+    setPolicyModalOpen(true);
+  };
   
   // Current active draft invoice
   const [invoice, setInvoice] = useState<Invoice>(() => {
@@ -152,9 +188,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/70 text-gray-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-slate-50/70 text-gray-900 font-sans flex flex-col relative">
       
-      {/* Top Header Navbar */}
+      {/* Top Header Navbar with Policy Navigation */}
       <InvoiceHeader
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -166,11 +202,12 @@ export default function App() {
         onNewInvoice={handleNewInvoice}
         savedCount={savedInvoices.length}
         showSaveSuccess={showSaveSuccess}
+        onOpenPolicy={handleOpenPolicy}
       />
 
       {/* Top Google AdSense Banner Placement */}
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <GoogleAd label="Sponsored Advertisement" />
+        <GoogleAd label="Advertisement" />
       </div>
 
       {/* Main Workspace Area */}
@@ -204,7 +241,17 @@ export default function App() {
       </main>
 
       {/* SEO & Informational Footer */}
-      <SeoFooter />
+      <SeoFooter onOpenPolicy={handleOpenPolicy} />
+
+      {/* Google AdSense Compliant Policy & Legal Modal */}
+      <PolicyModal
+        isOpen={policyModalOpen}
+        initialTab={policyModalTab}
+        onClose={() => setPolicyModalOpen(false)}
+      />
+
+      {/* GDPR & AdSense Cookie Consent Banner */}
+      <CookieBanner onOpenPrivacyPolicy={() => handleOpenPolicy('privacy')} />
 
     </div>
   );

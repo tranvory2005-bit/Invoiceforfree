@@ -49,9 +49,10 @@ export const GoogleAd: React.FC<GoogleAdProps> = ({
   const [adLoaded, setAdLoaded] = useState<boolean>(false);
   const [adBlockedOrEmpty, setAdBlockedOrEmpty] = useState<boolean>(false);
 
-  // Priority order: prop > localStorage > environment variable > default demo ID
+  // Priority order: prop > localStorage > environment variable > site default publisher ID
+  const DEFAULT_CLIENT_ID = 'ca-pub-2875537731587160';
   const envClientId = (import.meta as any).env?.VITE_ADSENSE_CLIENT_ID || '';
-  const effectiveClientId = client || localPublisherId || envClientId;
+  const effectiveClientId = client || localPublisherId || envClientId || DEFAULT_CLIENT_ID;
   const effectiveSlotId = localSlotId || slot;
 
   const isConfigured = Boolean(effectiveClientId && effectiveClientId.startsWith('ca-pub-'));

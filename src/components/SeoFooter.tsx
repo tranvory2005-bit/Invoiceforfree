@@ -1,8 +1,13 @@
 import React from 'react';
-import { ShieldCheck, FileCheck2, Zap, Globe, Sparkles, HelpCircle } from 'lucide-react';
+import { ShieldCheck, FileCheck2, Zap, Globe, Sparkles, HelpCircle, Lock, Mail, Info, BookOpen } from 'lucide-react';
 import { GoogleAd } from './GoogleAd';
+import { PolicyTab } from './PolicyModal';
 
-export const SeoFooter: React.FC = () => {
+interface SeoFooterProps {
+  onOpenPolicy?: (tab: PolicyTab) => void;
+}
+
+export const SeoFooter: React.FC<SeoFooterProps> = ({ onOpenPolicy }) => {
   return (
     <footer className="mt-16 border-t border-gray-200 bg-white py-12 px-4 sm:px-6 lg:px-8 print:hidden">
       <div className="max-w-7xl mx-auto space-y-12 text-gray-700">
@@ -93,7 +98,7 @@ export const SeoFooter: React.FC = () => {
                   <span className="text-gray-400 group-open:rotate-180 transition-transform">↓</span>
                 </summary>
                 <p className="mt-2 text-gray-600 leading-relaxed">
-                  Yes! Click the "Save Draft" button at any time. Your invoices are saved in your browser's local storage under the "Saved Invoices" tab so you can edit or duplicate them whenever you return.
+                  Yes! Click the &quot;Save Draft&quot; button at any time. Your invoices are saved in your browser&apos;s local storage under the &quot;Saved Invoices&quot; tab so you can edit or duplicate them whenever you return.
                 </p>
               </details>
 
@@ -103,25 +108,72 @@ export const SeoFooter: React.FC = () => {
                   <span className="text-gray-400 group-open:rotate-180 transition-transform">↓</span>
                 </summary>
                 <p className="mt-2 text-gray-600 leading-relaxed">
-                  Simply click the blue "Print / Download PDF" button at the top. Choose "Save as PDF" as your print destination in Google Chrome, Microsoft Edge, Safari, or Firefox.
+                  Simply click the blue &quot;Print / Download PDF&quot; button at the top. Choose &quot;Save as PDF&quot; as your print destination in Google Chrome, Microsoft Edge, Safari, or Firefox.
                 </p>
               </details>
             </div>
           </article>
         </section>
 
-        {/* Footer Ad Placement */}
+        {/* Footer Ad Placement - AdSense Policy Compliant Label */}
         <section className="pt-4 border-t border-gray-100">
-          <GoogleAd label="Sponsored Content" />
+          <GoogleAd label="Advertisement" />
         </section>
+
+        {/* AdSense Policy Links Section */}
+        {onOpenPolicy && (
+          <section className="pt-6 border-t border-gray-100 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-slate-600">
+            <button 
+              onClick={() => onOpenPolicy('privacy')}
+              className="hover:text-blue-600 transition-colors flex items-center gap-1"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Privacy Policy</span>
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => onOpenPolicy('terms')}
+              className="hover:text-blue-600 transition-colors flex items-center gap-1"
+            >
+              <Lock className="w-3.5 h-3.5 text-blue-600" />
+              <span>Terms of Service</span>
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => onOpenPolicy('about')}
+              className="hover:text-blue-600 transition-colors flex items-center gap-1"
+            >
+              <Info className="w-3.5 h-3.5 text-indigo-600" />
+              <span>About InvoicesForFree</span>
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => onOpenPolicy('contact')}
+              className="hover:text-blue-600 transition-colors flex items-center gap-1"
+            >
+              <Mail className="w-3.5 h-3.5 text-amber-600" />
+              <span>Contact & Support</span>
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => onOpenPolicy('guide')}
+              className="hover:text-blue-600 transition-colors flex items-center gap-1"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-purple-600" />
+              <span>Invoicing Guide</span>
+            </button>
+          </section>
+        )}
 
         {/* Footer Copyright */}
         <div className="pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-2">
-          <p>© {new Date().getFullYear()} Invoice Generator Pro. Free Online PDF Billing Tool.</p>
+          <p>© {new Date().getFullYear()} InvoicesForFree.com. Free Online PDF Billing Tool.</p>
           <div className="flex items-center gap-4 text-gray-500 font-medium">
             <span>Free PDF Invoice Creator</span>
             <span>•</span>
             <span>Multi-Currency Invoice Maker</span>
+            <span>•</span>
+            <span>Google AdSense Compliant</span>
           </div>
         </div>
 
