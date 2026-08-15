@@ -36,6 +36,7 @@ interface InvoiceEditorProps {
   savedCount?: number;
   showSaveSuccess?: boolean;
   onOpenHistory?: () => void;
+  onOpenDashboard?: () => void;
   onLoadSample?: (key: string) => void;
 }
 
@@ -48,6 +49,7 @@ export const InvoiceEditor: React.FC<InvoiceEditorProps> = ({
   savedCount = 0,
   showSaveSuccess = false,
   onOpenHistory,
+  onOpenDashboard,
   onLoadSample,
 }) => {
   const summary = calculateInvoiceSummary(invoice);
@@ -1108,7 +1110,7 @@ export const InvoiceEditor: React.FC<InvoiceEditorProps> = ({
               </button>
             </div>
 
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+            <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
               {onNewInvoice && (
                 <button
                   type="button"
@@ -1119,16 +1121,28 @@ export const InvoiceEditor: React.FC<InvoiceEditorProps> = ({
                 </button>
               )}
 
-              {onOpenHistory && (
-                <button
-                  type="button"
-                  onClick={onOpenHistory}
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
-                >
-                  <History className="w-3.5 h-3.5" />
-                  <span>History ({savedCount})</span>
-                </button>
-              )}
+              <div className="flex items-center gap-2.5">
+                {onOpenDashboard && (
+                  <button
+                    type="button"
+                    onClick={onOpenDashboard}
+                    className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                  >
+                    <span>Dashboard</span>
+                  </button>
+                )}
+
+                {onOpenHistory && (
+                  <button
+                    type="button"
+                    onClick={onOpenHistory}
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                  >
+                    <History className="w-3.5 h-3.5" />
+                    <span>History ({savedCount})</span>
+                  </button>
+                )}
+              </div>
             </div>
 
           </div>

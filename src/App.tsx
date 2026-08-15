@@ -4,6 +4,7 @@ import { SAMPLE_INVOICES, CREATE_NEW_INVOICE_TEMPLATE } from './data/sampleInvoi
 import { InvoiceHeader } from './components/InvoiceHeader';
 import { InvoiceEditor } from './components/InvoiceEditor';
 import { InvoiceHistory } from './components/InvoiceHistory';
+import { InvoiceDashboard } from './components/InvoiceDashboard';
 import { SeoFooter } from './components/SeoFooter';
 import { InvoicingKnowledgeHub } from './components/InvoicingKnowledgeHub';
 import { PolicyModal, PolicyTab } from './components/PolicyModal';
@@ -13,15 +14,17 @@ const STORAGE_KEY_SAVED_INVOICES = 'invoice_generator_saved_list_v1';
 const STORAGE_KEY_CURRENT_INVOICE = 'invoice_generator_current_draft_v1';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'editor' | 'history'>('editor');
+  const [activeTab, setActiveTab] = useState<'editor' | 'dashboard' | 'history'>('editor');
   const [policyModalOpen, setPolicyModalOpen] = useState(false);
   const [policyModalTab, setPolicyModalTab] = useState<PolicyTab>('privacy');
 
-  // Handle URL hash links like #privacy-policy, #terms-of-service, #about-us, #contact-us
+  // Handle URL hash links like #privacy-policy, #terms-of-service, #about-us, #contact-us, #dashboard
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.toLowerCase();
-      if (hash === '#privacy-policy' || hash === '#privacy') {
+      if (hash === '#dashboard') {
+        setActiveTab('dashboard');
+      } else if (hash === '#privacy-policy' || hash === '#privacy') {
         setPolicyModalTab('privacy');
         setPolicyModalOpen(true);
       } else if (hash === '#terms-of-service' || hash === '#terms') {
@@ -64,7 +67,9 @@ export default function App() {
 
   // Dynamic document title update
   useEffect(() => {
-    if (activeTab === 'history') {
+    if (activeTab === 'dashboard') {
+      document.title = `Business Performance Dashboard | Free Online Invoice Generator`;
+    } else if (activeTab === 'history') {
       document.title = `Saved Invoices History | Free Online Invoice Generator`;
     } else if (invoice.invoiceNumber) {
       document.title = `Invoice #${invoice.invoiceNumber} | Free Online Invoice Generator`;
@@ -78,12 +83,15 @@ export default function App() {
     try {
       const savedList = localStorage.getItem(STORAGE_KEY_SAVED_INVOICES);
       if (savedList) {
-        return JSON.parse(savedList);
+        const parsed = JSON.parse(savedList);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
       }
     } catch (e) {
       console.error('Failed to parse saved invoices history:', e);
     }
-    return [SAMPLE_INVOICES.web_design, SAMPLE_INVOICES.consulting, SAMPLE_INVOICES.creative_photo];
+    return Object.values(SAMPLE_INVOICES);
   });
 
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
@@ -217,6 +225,7 @@ export default function App() {
               savedCount={savedInvoices.length}
               showSaveSuccess={showSaveSuccess}
               onOpenHistory={() => setActiveTab('history')}
+              onOpenDashboard={() => setActiveTab('dashboard')}
               onLoadSample={handleLoadSample}
             />
             
@@ -225,7 +234,28 @@ export default function App() {
           </>
         )}
 
-        {/* VIEW 2: SAVED INVOICES HISTORY */}
+        {/* VIEW 2: BUSINESS PERFORMANCE DASHBOARD */}
+        {activeTab === 'dashboard' && (
+          <div className="pb-16">
+            <div className="mb-4 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setActiveTab('editor')}
+                className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
+              >
+                ← Back to Invoice Editor
+              </button>
+            </div>
+            <InvoiceDashboard
+              invoices={savedInvoices}
+              onSelectInvoice={handleSelectInvoice}
+              onNewInvoice={handleNewInvoice}
+              onNavigateHistory={() => setActiveTab('history')}
+            />
+          </div>
+        )}
+
+        {/* VIEW 3: SAVED INVOICES HISTORY */}
         {activeTab === 'history' && (
           <div className="pb-16">
             <div className="mb-4 flex items-center justify-between">
@@ -245,6 +275,7 @@ export default function App() {
               onUpdateStatus={handleUpdateStatus}
               onNewInvoice={handleNewInvoice}
               onPrintInvoice={(inv) => handlePrintInvoice(inv)}
+              onNavigateDashboard={() => setActiveTab('dashboard')}
             />
           </div>
         )}

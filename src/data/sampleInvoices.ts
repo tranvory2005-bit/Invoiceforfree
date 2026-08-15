@@ -6,8 +6,8 @@ export const SAMPLE_INVOICES: Record<string, Invoice> = {
     id: 'sample-inv-001',
     invoiceNumber: 'INV-2026-001',
     referenceNumber: 'PO-98421',
-    issueDate: new Date().toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    issueDate: '2026-08-01',
+    dueDate: '2026-08-15',
     paymentTerms: 'Net 14 Days',
     status: 'pending',
     currency: DEFAULT_CURRENCY,
@@ -96,42 +96,42 @@ export const SAMPLE_INVOICES: Record<string, Invoice> = {
     primaryColor: '#2563eb',
     fontFamily: 'sans',
     
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: '2026-08-01T10:00:00.000Z',
+    updatedAt: '2026-08-01T10:00:00.000Z',
   },
   
   consulting: {
     id: 'sample-inv-002',
     invoiceNumber: 'INV-2026-089',
     referenceNumber: 'AGR-40192',
-    issueDate: new Date().toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    issueDate: '2026-07-15',
+    dueDate: '2026-08-14',
     paymentTerms: 'Net 30 Days',
-    status: 'pending',
-    currency: CURRENCIES.find(c => c.code === 'EUR') || DEFAULT_CURRENCY,
+    status: 'paid',
+    currency: DEFAULT_CURRENCY,
     
     sender: {
       name: 'Vanguard Corporate Advisory Ltd.',
-      email: 'finance@vanguardadvisory.eu',
-      phone: '+44 20 7946 0912',
-      address: '25 Bank Street, Canary Wharf',
-      cityStateZip: 'London, E14 5JP',
-      country: 'United Kingdom',
-      taxIdLabel: 'VAT Reg No.',
-      taxId: 'GB 982 4810 29',
-      website: 'https://vanguardadvisory.eu',
+      email: 'finance@vanguardadvisory.com',
+      phone: '+1 (555) 794-0912',
+      address: '25 Bank Street, Financial Center',
+      cityStateZip: 'New York, NY 10005',
+      country: 'United States',
+      taxIdLabel: 'Tax ID',
+      taxId: 'US-98-2481029',
+      website: 'https://vanguardadvisory.com',
     },
     
     client: {
       name: 'Marcus Vance',
-      companyName: 'EuroTech Ventures Holding S.A.',
-      email: 'm.vance@eurotechholdings.de',
-      phone: '+49 30 12345678',
-      address: 'Friedrichstraße 100',
-      cityStateZip: '10117 Berlin',
-      country: 'Germany',
-      clientTaxId: 'DE 291 039 122',
-      poNumber: 'PO-EUR-9921',
+      companyName: 'EuroTech Ventures Holding',
+      email: 'm.vance@eurotechholdings.com',
+      phone: '+1 (555) 123-5678',
+      address: '450 Lexington Avenue',
+      cityStateZip: 'New York, NY 10017',
+      country: 'United States',
+      clientTaxId: 'NY-291-039',
+      poNumber: 'PO-2026-9921',
     },
     
     items: [
@@ -145,55 +145,55 @@ export const SAMPLE_INVOICES: Record<string, Invoice> = {
       {
         id: 'c-2',
         description: 'Financial Modeling & Regulatory Compliance Audit (Hours)',
-        quantity: 32,
-        rate: 220,
-        amount: 7040,
+        quantity: 20,
+        rate: 200,
+        amount: 4000,
       },
       {
         id: 'c-3',
         description: 'Executive Leadership Workshops & Strategic Realignment Sessions',
         quantity: 2,
-        rate: 1800,
-        amount: 3600,
+        rate: 1500,
+        amount: 3000,
       },
     ],
     
     taxType: 'on_total',
-    taxRate: 19.0,
-    taxName: 'EU VAT Standard',
+    taxRate: 5.0,
+    taxName: 'Service Tax',
     
     discountType: 'percentage',
     discountValue: 5,
     
     shippingFee: 0,
-    amountPaid: 0,
+    amountPaid: 13442.50,
     
-    notes: 'All services performed under the Master Services Agreement executed Q1 2026. Reverse charge VAT rules apply where applicable for cross-border B2B.',
-    terms: 'Strictly Net 30 days from invoice dispatch. Electronic funds transfer to the designated Barclays IBAN account below.',
+    notes: 'All services performed under the Master Services Agreement executed Q1 2026.',
+    terms: 'Strictly Net 30 days from invoice dispatch. Direct Wire or ACH.',
     
     paymentDetails: {
-      bankName: 'Barclays Corporate Bank UK',
+      bankName: 'JPMorgan Chase Commercial',
       accountName: 'Vanguard Corporate Advisory Ltd',
       accountNumber: '83920192',
-      routingNumber: '20-00-00',
-      ibanSwift: 'GB82 BARC 2000 0083 9201 92',
-      paypalEmail: 'billing@vanguardadvisory.eu',
+      routingNumber: '021000021',
+      ibanSwift: 'CHASUS33',
+      paypalEmail: 'billing@vanguardadvisory.com',
     },
     
     templateStyle: 'elegant',
     primaryColor: '#334155',
     fontFamily: 'serif',
     
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: '2026-07-15T09:30:00.000Z',
+    updatedAt: '2026-07-15T09:30:00.000Z',
   },
   
   creative_photo: {
     id: 'sample-inv-003',
     invoiceNumber: 'INV-2026-312',
-    referenceNumber: 'EVENT-OCT-26',
-    issueDate: new Date().toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    referenceNumber: 'EVENT-JUN-26',
+    issueDate: '2026-06-20',
+    dueDate: '2026-06-27',
     paymentTerms: 'Due on Receipt',
     status: 'paid',
     currency: DEFAULT_CURRENCY,
@@ -268,8 +268,210 @@ export const SAMPLE_INVOICES: Record<string, Invoice> = {
     primaryColor: '#7c3aed',
     fontFamily: 'sans',
     
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: '2026-06-20T14:15:00.000Z',
+    updatedAt: '2026-06-20T14:15:00.000Z',
+  },
+
+  cloud_migration: {
+    id: 'sample-inv-004',
+    invoiceNumber: 'INV-2026-044',
+    referenceNumber: 'ENG-2026-09',
+    issueDate: '2026-05-10',
+    dueDate: '2026-05-24',
+    paymentTerms: 'Net 14 Days',
+    status: 'paid',
+    currency: DEFAULT_CURRENCY,
+    
+    sender: {
+      name: 'Apex Digital Design Studio',
+      email: 'billing@apexdigital.com',
+      phone: '+1 (555) 234-5678',
+      address: '742 Evergreen Terrace, Suite 400',
+      cityStateZip: 'San Francisco, CA 94107',
+      country: 'United States',
+      taxIdLabel: 'EIN / Tax ID',
+      taxId: 'US-94-3829102',
+    },
+    
+    client: {
+      name: 'David Chen',
+      companyName: 'CloudScale Logistics Inc.',
+      email: 'd.chen@cloudscalelogistics.com',
+      phone: '+1 (555) 441-8899',
+      address: '900 Technology Blvd',
+      cityStateZip: 'Austin, TX 78701',
+      country: 'United States',
+    },
+    
+    items: [
+      {
+        id: 'cm-1',
+        description: 'Microservices Architecture Migration & Docker Containerization',
+        quantity: 40,
+        rate: 130,
+        amount: 5200,
+      },
+      {
+        id: 'cm-2',
+        description: 'CI/CD Pipeline Automation & Automated Infrastructure Scripts',
+        quantity: 1,
+        rate: 2200,
+        amount: 2200,
+      },
+    ],
+    
+    taxType: 'none',
+    taxRate: 0,
+    taxName: 'Tax',
+    discountType: 'fixed',
+    discountValue: 0,
+    shippingFee: 0,
+    amountPaid: 7400,
+    
+    notes: 'Project completed on schedule with zero production downtime.',
+    terms: 'Paid in full upon sign-off.',
+    
+    paymentDetails: {
+      bankName: 'Silicon Valley Commercial Bank',
+      accountName: 'Apex Digital Design LLC',
+    },
+    
+    templateStyle: 'modern',
+    primaryColor: '#059669',
+    fontFamily: 'sans',
+    
+    createdAt: '2026-05-10T11:00:00.000Z',
+    updatedAt: '2026-05-10T11:00:00.000Z',
+  },
+
+  overdue_retainer: {
+    id: 'sample-inv-005',
+    invoiceNumber: 'INV-2026-021',
+    referenceNumber: 'RET-APRIL',
+    issueDate: '2026-04-01',
+    dueDate: '2026-04-15',
+    paymentTerms: 'Net 14 Days',
+    status: 'overdue',
+    currency: DEFAULT_CURRENCY,
+    
+    sender: {
+      name: 'Apex Digital Design Studio',
+      email: 'billing@apexdigital.com',
+      phone: '+1 (555) 234-5678',
+      address: '742 Evergreen Terrace, Suite 400',
+      cityStateZip: 'San Francisco, CA 94107',
+      country: 'United States',
+      taxIdLabel: 'EIN / Tax ID',
+      taxId: 'US-94-3829102',
+    },
+    
+    client: {
+      name: 'Rachel Adams',
+      companyName: 'Nexus E-Commerce Brands',
+      email: 'radams@nexusecom.io',
+      phone: '+1 (555) 990-1122',
+      address: '330 Michigan Ave',
+      cityStateZip: 'Chicago, IL 60601',
+      country: 'United States',
+    },
+    
+    items: [
+      {
+        id: 'ret-1',
+        description: 'Monthly Dedicated UI/UX Retainer & Conversion Optimization',
+        quantity: 1,
+        rate: 3500,
+        amount: 3500,
+      },
+    ],
+    
+    taxType: 'none',
+    taxRate: 0,
+    taxName: 'Tax',
+    discountType: 'fixed',
+    discountValue: 0,
+    shippingFee: 0,
+    amountPaid: 0,
+    
+    notes: 'Payment reminder: this invoice is past its due date. Please settle balance promptly.',
+    terms: '1.5% monthly late fee accrues after 30 days overdue.',
+    
+    paymentDetails: {
+      bankName: 'Silicon Valley Commercial Bank',
+      accountName: 'Apex Digital Design LLC',
+    },
+    
+    templateStyle: 'modern',
+    primaryColor: '#e11d48',
+    fontFamily: 'sans',
+    
+    createdAt: '2026-04-01T08:00:00.000Z',
+    updatedAt: '2026-04-01T08:00:00.000Z',
+  },
+
+  q1_audit: {
+    id: 'sample-inv-006',
+    invoiceNumber: 'INV-2026-012',
+    referenceNumber: 'AUD-MARCH',
+    issueDate: '2026-03-12',
+    dueDate: '2026-03-26',
+    paymentTerms: 'Net 14 Days',
+    status: 'paid',
+    currency: DEFAULT_CURRENCY,
+    
+    sender: {
+      name: 'Apex Digital Design Studio',
+      email: 'billing@apexdigital.com',
+      phone: '+1 (555) 234-5678',
+      address: '742 Evergreen Terrace, Suite 400',
+      cityStateZip: 'San Francisco, CA 94107',
+      country: 'United States',
+      taxIdLabel: 'EIN / Tax ID',
+      taxId: 'US-94-3829102',
+    },
+    
+    client: {
+      name: 'Sarah Jenkins',
+      companyName: 'Lumina Health Technologies Inc.',
+      email: 's.jenkins@luminahealth.io',
+      phone: '+1 (555) 876-5432',
+      address: '120 Market Street, 12th Floor',
+      cityStateZip: 'Seattle, WA 98101',
+      country: 'United States',
+    },
+    
+    items: [
+      {
+        id: 'aud-1',
+        description: 'Design Architecture Audit & Usability Accessibility (WCAG 2.1) Assessment',
+        quantity: 1,
+        rate: 4200,
+        amount: 4200,
+      },
+    ],
+    
+    taxType: 'none',
+    taxRate: 0,
+    taxName: 'Tax',
+    discountType: 'fixed',
+    discountValue: 0,
+    shippingFee: 0,
+    amountPaid: 4200,
+    
+    notes: 'Comprehensive audit report and remediation matrix delivered.',
+    terms: 'Payment received in full. Thank you!',
+    
+    paymentDetails: {
+      bankName: 'Silicon Valley Commercial Bank',
+      accountName: 'Apex Digital Design LLC',
+    },
+    
+    templateStyle: 'modern',
+    primaryColor: '#2563eb',
+    fontFamily: 'sans',
+    
+    createdAt: '2026-03-12T10:00:00.000Z',
+    updatedAt: '2026-03-12T10:00:00.000Z',
   }
 };
 

@@ -11,7 +11,8 @@ import {
   FileText, 
   Plus,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  BarChart3
 } from 'lucide-react';
 import { Invoice, InvoiceStatus } from '../types';
 import { calculateInvoiceSummary, formatCurrency } from '../utils/calculator';
@@ -24,6 +25,7 @@ interface InvoiceHistoryProps {
   onUpdateStatus: (id: string, newStatus: InvoiceStatus) => void;
   onNewInvoice: () => void;
   onPrintInvoice: (invoice: Invoice) => void;
+  onNavigateDashboard?: () => void;
 }
 
 export const InvoiceHistory: React.FC<InvoiceHistoryProps> = ({
@@ -34,6 +36,7 @@ export const InvoiceHistory: React.FC<InvoiceHistoryProps> = ({
   onUpdateStatus,
   onNewInvoice,
   onPrintInvoice,
+  onNavigateDashboard,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -120,10 +123,21 @@ export const InvoiceHistory: React.FC<InvoiceHistoryProps> = ({
             </button>
           ))}
 
+          {onNavigateDashboard && (
+            <button
+              type="button"
+              onClick={onNavigateDashboard}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors whitespace-nowrap"
+            >
+              <BarChart3 className="w-3.5 h-3.5" />
+              <span>Dashboard</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onNewInvoice}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-2xs transition-colors whitespace-nowrap ml-2"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-2xs transition-colors whitespace-nowrap ml-1"
           >
             <Plus className="w-3.5 h-3.5" />
             New
