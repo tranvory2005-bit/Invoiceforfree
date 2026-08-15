@@ -1,35 +1,72 @@
 @import "tailwindcss";
 
-@layer utilities {
-  @media print {
-    body {
-      background-color: white !important;
-      color: black !important;
-      font-size: 12pt !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
 
-    header,
-    nav,
-    .print\:hidden {
-      display: none !important;
-    }
+/* Paper Document & Print Styles */
+@media print {
+  body {
+    background-color: white !important;
+    color: #1e293b !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
-    #invoice-print-area {
-      box-shadow: none !important;
-      border: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      border-radius: 0 !important;
-    }
+  header,
+  nav,
+  footer,
+  aside,
+  .print\:hidden,
+  .no-print {
+    display: none !important;
+  }
 
-    /* Keep background colors in print if supported by browser settings */
-    * {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
+  #invoice-paper {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    border-radius: 0 !important;
+  }
+
+  /* Make inputs look like flat printed text */
+  input, textarea, select {
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    resize: none !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: transparent !important;
+  }
+
+  .interactive-button,
+  .drag-overlay,
+  .remove-row-btn {
+    display: none !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 1.5cm 1.5cm;
   }
 }

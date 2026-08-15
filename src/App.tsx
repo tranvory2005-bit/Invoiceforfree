@@ -3,7 +3,6 @@ import { Invoice, InvoiceStatus } from './types';
 import { SAMPLE_INVOICES, CREATE_NEW_INVOICE_TEMPLATE } from './data/sampleInvoices';
 import { InvoiceHeader } from './components/InvoiceHeader';
 import { InvoiceEditor } from './components/InvoiceEditor';
-import { InvoicePreview } from './components/InvoicePreview';
 import { InvoiceHistory } from './components/InvoiceHistory';
 import { SeoFooter } from './components/SeoFooter';
 import { InvoicingKnowledgeHub } from './components/InvoicingKnowledgeHub';
@@ -14,7 +13,7 @@ const STORAGE_KEY_SAVED_INVOICES = 'invoice_generator_saved_list_v1';
 const STORAGE_KEY_CURRENT_INVOICE = 'invoice_generator_current_draft_v1';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'history'>('editor');
+  const [activeTab, setActiveTab] = useState<'editor' | 'history'>('editor');
   const [policyModalOpen, setPolicyModalOpen] = useState(false);
   const [policyModalTab, setPolicyModalTab] = useState<PolicyTab>('privacy');
 
@@ -63,14 +62,14 @@ export default function App() {
     return SAMPLE_INVOICES.web_design;
   });
 
-  // Dynamic document title update for SEO and browser tab usability
+  // Dynamic document title update
   useEffect(() => {
-    if (activeTab === 'preview' && invoice.invoiceNumber) {
-      document.title = `Preview Invoice ${invoice.invoiceNumber} | Free Invoice Generator`;
-    } else if (activeTab === 'history') {
-      document.title = `Saved Invoices History | Free Invoice Generator`;
+    if (activeTab === 'history') {
+      document.title = `Saved Invoices History | Free Online Invoice Generator`;
+    } else if (invoice.invoiceNumber) {
+      document.title = `Invoice #${invoice.invoiceNumber} | Free Online Invoice Generator`;
     } else {
-      document.title = `Free Online Invoice Generator — Professional PDF Invoice Maker`;
+      document.title = `Free Online Invoice Generator — Instant PDF Invoicing`;
     }
   }, [activeTab, invoice.invoiceNumber]);
 
@@ -123,16 +122,14 @@ export default function App() {
     setTimeout(() => setShowSaveSuccess(false), 2000);
   };
 
-  // Trigger print dialog
+  // Trigger print dialog (Direct PDF export via browser print)
   const handlePrintInvoice = (targetInvoice?: Invoice) => {
     if (targetInvoice) {
       setInvoice(targetInvoice);
     }
-    setActiveTab('preview');
-    // Short delay to ensure DOM is rendered before print dialog opens
     setTimeout(() => {
       window.print();
-    }, 150);
+    }, 100);
   };
 
   // Load sample template
@@ -144,7 +141,7 @@ export default function App() {
     }
   };
 
-  // Create brand new invoice
+  // Create brand new blank invoice
   const handleNewInvoice = () => {
     setInvoice(CREATE_NEW_INVOICE_TEMPLATE());
     setActiveTab('editor');
@@ -188,9 +185,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/70 text-gray-900 font-sans flex flex-col relative">
+    <div className="min-h-screen bg-slate-100/70 text-slate-900 font-sans flex flex-col relative">
       
-      {/* Top Header Navbar with Policy Navigation */}
+      {/* Top Header Navbar */}
       <InvoiceHeader
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -205,50 +202,66 @@ export default function App() {
         onOpenPolicy={handleOpenPolicy}
       />
 
-      {/* Main Workspace Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         
-        {/* VIEW 1: EDITOR */}
+        {/* VIEW 1: CLEAN WYSIWYG INVOICE EDITOR & GUIDE */}
         {activeTab === 'editor' && (
           <>
-            <InvoiceEditor invoice={invoice} setInvoice={setInvoice} />
+            <InvoiceEditor 
+              invoice={invoice} 
+              setInvoice={setInvoice}
+              onSaveInvoice={handleSaveInvoice}
+              onPrintInvoice={() => handlePrintInvoice()}
+              onNewInvoice={handleNewInvoice}
+              savedCount={savedInvoices.length}
+              showSaveSuccess={showSaveSuccess}
+              onOpenHistory={() => setActiveTab('history')}
+              onLoadSample={handleLoadSample}
+            />
+            
+            {/* SEO & Educational Knowledge Center below the editor */}
             <InvoicingKnowledgeHub />
           </>
         )}
 
-        {/* VIEW 2: PREVIEW */}
-        {activeTab === 'preview' && (
-          <div className="pb-12 space-y-4">
-            <InvoicePreview invoice={invoice} />
-          </div>
-        )}
-
-        {/* VIEW 3: SAVED INVOICES HISTORY */}
+        {/* VIEW 2: SAVED INVOICES HISTORY */}
         {activeTab === 'history' && (
-          <InvoiceHistory
-            savedInvoices={savedInvoices}
-            onSelectInvoice={handleSelectInvoice}
-            onDeleteInvoice={handleDeleteInvoice}
-            onDuplicateInvoice={handleDuplicateInvoice}
-            onUpdateStatus={handleUpdateStatus}
-            onNewInvoice={handleNewInvoice}
-            onPrintInvoice={(inv) => handlePrintInvoice(inv)}
-          />
+          <div className="pb-16">
+            <div className="mb-4 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setActiveTab('editor')}
+                className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
+              >
+                ← Back to Invoice Editor
+              </button>
+            </div>
+            <InvoiceHistory
+              savedInvoices={savedInvoices}
+              onSelectInvoice={handleSelectInvoice}
+              onDeleteInvoice={handleDeleteInvoice}
+              onDuplicateInvoice={handleDuplicateInvoice}
+              onUpdateStatus={handleUpdateStatus}
+              onNewInvoice={handleNewInvoice}
+              onPrintInvoice={(inv) => handlePrintInvoice(inv)}
+            />
+          </div>
         )}
 
       </main>
 
-      {/* SEO & Informational Footer */}
+      {/* Footer */}
       <SeoFooter onOpenPolicy={handleOpenPolicy} />
 
-      {/* Google AdSense Compliant Policy & Legal Modal */}
+      {/* Policy & Legal Modal */}
       <PolicyModal
         isOpen={policyModalOpen}
         initialTab={policyModalTab}
         onClose={() => setPolicyModalOpen(false)}
       />
 
-      {/* GDPR & AdSense Cookie Consent Banner */}
+      {/* Cookie Consent Banner */}
       <CookieBanner onOpenPrivacyPolicy={() => handleOpenPolicy('privacy')} />
 
     </div>
