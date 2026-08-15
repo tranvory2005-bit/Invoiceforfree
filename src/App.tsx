@@ -68,13 +68,13 @@ export default function App() {
   // Dynamic document title update
   useEffect(() => {
     if (activeTab === 'dashboard') {
-      document.title = `Business Performance Dashboard | Free Online Invoice Generator`;
+      document.title = `Business Performance Dashboard | InvoicesForFree`;
     } else if (activeTab === 'history') {
-      document.title = `Saved Invoices History | Free Online Invoice Generator`;
+      document.title = `Saved Invoices History | InvoicesForFree`;
     } else if (invoice.invoiceNumber) {
-      document.title = `Invoice #${invoice.invoiceNumber} | Free Online Invoice Generator`;
+      document.title = `Invoice #${invoice.invoiceNumber} | InvoicesForFree — Free Invoice Generator`;
     } else {
-      document.title = `Free Online Invoice Generator — Instant PDF Invoicing`;
+      document.title = `InvoicesForFree — 100% Free Online Invoice Generator & PDF Maker`;
     }
   }, [activeTab, invoice.invoiceNumber]);
 

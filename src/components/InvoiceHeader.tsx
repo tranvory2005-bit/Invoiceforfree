@@ -93,20 +93,23 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
           {/* Logo & Main Title */}
           <div 
             onClick={() => setActiveTab('editor')}
-            className="flex items-center gap-3 cursor-pointer select-none"
+            className="flex items-center gap-3 cursor-pointer select-none group"
           >
-            <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs">
+            <div className="w-9 h-9 rounded-lg bg-blue-600 group-hover:bg-blue-700 flex items-center justify-center text-white shadow-xs transition-colors">
               <FileText className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
-                  Invoice Generator
+                <h1 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight flex items-center">
+                  <span>Invoices</span><span className="text-blue-600">ForFree</span>
                 </h1>
-                <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">
-                  Free
+                <span className="hidden md:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  100% Free
                 </span>
               </div>
+              <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
+                Free Online Invoice Generator
+              </p>
             </div>
           </div>
 
