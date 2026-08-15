@@ -6,7 +6,7 @@ import { InvoiceEditor } from './components/InvoiceEditor';
 import { InvoicePreview } from './components/InvoicePreview';
 import { InvoiceHistory } from './components/InvoiceHistory';
 import { SeoFooter } from './components/SeoFooter';
-import { GoogleAd } from './components/GoogleAd';
+import { InvoicingKnowledgeHub } from './components/InvoicingKnowledgeHub';
 import { PolicyModal, PolicyTab } from './components/PolicyModal';
 import { CookieBanner } from './components/CookieBanner';
 
@@ -205,17 +205,15 @@ export default function App() {
         onOpenPolicy={handleOpenPolicy}
       />
 
-      {/* Top Google AdSense Banner Placement */}
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <GoogleAd label="Advertisement" />
-      </div>
-
       {/* Main Workspace Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-2">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         
         {/* VIEW 1: EDITOR */}
         {activeTab === 'editor' && (
-          <InvoiceEditor invoice={invoice} setInvoice={setInvoice} />
+          <>
+            <InvoiceEditor invoice={invoice} setInvoice={setInvoice} />
+            <InvoicingKnowledgeHub />
+          </>
         )}
 
         {/* VIEW 2: PREVIEW */}

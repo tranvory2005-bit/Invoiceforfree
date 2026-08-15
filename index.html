@@ -84,6 +84,22 @@
             "@type": "Answer",
             "text": "All invoice data is saved locally inside your browser's secure storage. Your financial details never leave your device."
           }
+        },
+        {
+          "@type": "Question",
+          "name": "What are standard payment terms on business invoices?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Common payment terms include 'Due Upon Receipt' for immediate payment, 'Net 15' or 'Net 30' allowing 15 or 30 days from the invoice date, and '2/10 Net 30' offering a 2% cash discount for payment within 10 days."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What information must be included on a legal tax invoice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A compliant invoice must include: unique sequential invoice number, date of issue, seller's legal business name and contact details, buyer's details, tax identification numbers (EIN, VAT, or ABN), clear description of goods or services, line item prices, applicable taxes, and total balance due."
+          }
         }
       ]
     }
@@ -91,6 +107,37 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Semantic Content Fallback for Web Crawlers & Automated AdSense Reviewers -->
+    <noscript>
+      <div style="font-family: system-ui, sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; line-height: 1.6; color: #1e293b;">
+        <h1>Free Online Invoice Generator & Professional Billing Guide</h1>
+        <p>
+          Welcome to InvoicesForFree.com, a free professional invoice creation platform designed for freelancers, contractors, consultants, and small business owners. Create, customize, print, and export high-resolution PDF invoices instantly with multi-currency support, tax calculation, and custom branding.
+        </p>
+        
+        <h2>Essential Elements of a Legally Compliant Invoice</h2>
+        <ul>
+          <li><strong>Header & Business Identification:</strong> Official business name, registered address, phone number, email, and tax identification number (EIN, VAT, ABN).</li>
+          <li><strong>Unique Invoice Number & Dates:</strong> Sequential tracking number, issue date, and strict payment due date.</li>
+          <li><strong>Client Information:</strong> Client contact person, company name, billing address, and tax ID if applicable.</li>
+          <li><strong>Itemized Deliverables:</strong> Detailed breakdown of services rendered or goods sold, quantities, rates, and subtotals.</li>
+          <li><strong>Taxes & Discounts:</strong> Explicit calculation of local sales tax, VAT, GST, or applied customer discounts.</li>
+          <li><strong>Payment Instructions:</strong> Bank wire details, IBAN/SWIFT numbers, or payment links with clear payment terms (Net 30, Due upon receipt).</li>
+        </ul>
+
+        <h2>International Tax & Compliance Guidelines</h2>
+        <p>
+          Invoicing laws differ worldwide: In the United States, independent contractors provide Form W-9 and receive 1099-NEC. In the European Union, the VAT Directive mandates seller and buyer VAT numbers and reverse charge notifications on cross-border B2B trade. In the UK, HMRC requires specific VAT itemization in GBP. In Canada and Australia, GST/HST and ABN registrations must be displayed on tax invoices.
+        </p>
+
+        <h2>Privacy, Terms & Security</h2>
+        <p>
+          All invoice draft data remains private and stored locally on your device. Review our <a href="#privacy-policy">Privacy Policy</a>, <a href="#terms-of-service">Terms of Service</a>, and <a href="#invoicing-guide">Invoicing Guide</a>.
+        </p>
+      </div>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
