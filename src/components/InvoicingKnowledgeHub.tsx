@@ -456,7 +456,11 @@ export const InvoicingKnowledgeHub: React.FC = () => {
 
       {/* Editorial Content Google Ad Placement - strictly surrounded by educational content */}
       <div className="p-6 bg-slate-50/70 border-t border-slate-200/80">
-        <GoogleAd label="Advertisement" />
+        <GoogleAd 
+          client="ca-pub-2875537731587160"
+          slot="2802725446"
+          label="Advertisement" 
+        />
       </div>
 
     </section>
