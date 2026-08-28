@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Invoice, InvoiceStatus } from './types';
 import { SAMPLE_INVOICES, CREATE_NEW_INVOICE_TEMPLATE } from './data/sampleInvoices';
-import { InvoiceHeader } from './components/InvoiceHeader';
+import { ARTICLES_DATA, Article } from './data/articles';
+import { InvoiceHeader, MainNavTab } from './components/InvoiceHeader';
 import { InvoiceEditor } from './components/InvoiceEditor';
 import { InvoiceHistory } from './components/InvoiceHistory';
 import { InvoiceDashboard } from './components/InvoiceDashboard';
+import { ArticleList } from './components/ArticleList';
+import { ArticleView } from './components/ArticleView';
+import { AboutUsPage } from './components/AboutUsPage';
+import { ContactUsPage } from './components/ContactUsPage';
 import { SeoFooter } from './components/SeoFooter';
 import { InvoicingKnowledgeHub } from './components/InvoicingKnowledgeHub';
 import { PolicyModal, PolicyTab } from './components/PolicyModal';
@@ -14,31 +19,41 @@ const STORAGE_KEY_SAVED_INVOICES = 'invoice_generator_saved_list_v1';
 const STORAGE_KEY_CURRENT_INVOICE = 'invoice_generator_current_draft_v1';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'editor' | 'dashboard' | 'history'>('editor');
+  const [activeTab, setActiveTab] = useState<MainNavTab>('editor');
+  const [selectedArticleSlug, setSelectedArticleSlug] = useState<string | null>(null);
   const [policyModalOpen, setPolicyModalOpen] = useState(false);
   const [policyModalTab, setPolicyModalTab] = useState<PolicyTab>('privacy');
 
-  // Handle URL hash links like #privacy-policy, #terms-of-service, #about-us, #contact-us, #dashboard
+  // Handle URL hash routing
   useEffect(() => {
     const handleHash = () => {
-      const hash = window.location.hash.toLowerCase();
-      if (hash === '#dashboard') {
+      const rawHash = window.location.hash;
+      const hash = rawHash.toLowerCase();
+
+      if (hash.startsWith('#guide/')) {
+        const slug = rawHash.substring(7);
+        setSelectedArticleSlug(slug);
+        setActiveTab('guides');
+      } else if (hash === '#guides' || hash === '#articles' || hash === '#knowledge-hub') {
+        setSelectedArticleSlug(null);
+        setActiveTab('guides');
+      } else if (hash === '#about-us' || hash === '#about') {
+        setActiveTab('about');
+      } else if (hash === '#contact-us' || hash === '#contact') {
+        setActiveTab('contact');
+      } else if (hash === '#dashboard') {
         setActiveTab('dashboard');
+      } else if (hash === '#history') {
+        setActiveTab('history');
       } else if (hash === '#privacy-policy' || hash === '#privacy') {
         setPolicyModalTab('privacy');
         setPolicyModalOpen(true);
       } else if (hash === '#terms-of-service' || hash === '#terms') {
         setPolicyModalTab('terms');
         setPolicyModalOpen(true);
-      } else if (hash === '#about-us' || hash === '#about') {
-        setPolicyModalTab('about');
-        setPolicyModalOpen(true);
-      } else if (hash === '#contact-us' || hash === '#contact') {
-        setPolicyModalTab('contact');
-        setPolicyModalOpen(true);
-      } else if (hash === '#invoicing-guide' || hash === '#guide') {
-        setPolicyModalTab('guide');
-        setPolicyModalOpen(true);
+      } else if (hash === '#invoicing-guide') {
+        setSelectedArticleSlug(null);
+        setActiveTab('guides');
       }
     };
 
@@ -48,8 +63,30 @@ export default function App() {
   }, []);
 
   const handleOpenPolicy = (tab: PolicyTab) => {
-    setPolicyModalTab(tab);
-    setPolicyModalOpen(true);
+    if (tab === 'about') {
+      setActiveTab('about');
+    } else if (tab === 'contact') {
+      setActiveTab('contact');
+    } else if (tab === 'guide') {
+      setSelectedArticleSlug(null);
+      setActiveTab('guides');
+    } else {
+      setPolicyModalTab(tab);
+      setPolicyModalOpen(true);
+    }
+  };
+
+  const handleSelectArticle = (slug: string) => {
+    setSelectedArticleSlug(slug);
+    setActiveTab('guides');
+    window.location.hash = `#guide/${slug}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackToArticles = () => {
+    setSelectedArticleSlug(null);
+    window.location.hash = '#guides';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   // Current active draft invoice
@@ -65,18 +102,29 @@ export default function App() {
     return SAMPLE_INVOICES.web_design;
   });
 
-  // Dynamic document title update
+  // Dynamic document title & meta update
   useEffect(() => {
-    if (activeTab === 'dashboard') {
-      document.title = `Business Performance Dashboard | InvoicesForFree`;
+    if (activeTab === 'guides') {
+      if (selectedArticleSlug) {
+        const found = ARTICLES_DATA.find((a) => a.slug === selectedArticleSlug);
+        document.title = found ? `${found.title} | InvoicesForFree` : 'Invoicing Guides & Articles | InvoicesForFree';
+      } else {
+        document.title = 'Invoicing Guides, Tax Compliance & Cashflow Center | InvoicesForFree';
+      }
+    } else if (activeTab === 'about') {
+      document.title = 'About InvoicesForFree — Privacy-First Free Invoicing Platform';
+    } else if (activeTab === 'contact') {
+      document.title = 'Contact Support & Help Desk | InvoicesForFree';
+    } else if (activeTab === 'dashboard') {
+      document.title = 'Business Performance Dashboard | InvoicesForFree';
     } else if (activeTab === 'history') {
-      document.title = `Saved Invoices History | InvoicesForFree`;
+      document.title = 'Saved Invoices History | InvoicesForFree';
     } else if (invoice.invoiceNumber) {
       document.title = `Invoice #${invoice.invoiceNumber} | InvoicesForFree — Free Invoice Generator`;
     } else {
-      document.title = `InvoicesForFree — 100% Free Online Invoice Generator & PDF Maker`;
+      document.title = 'InvoicesForFree — 100% Free Online Invoice Generator & PDF Maker';
     }
-  }, [activeTab, invoice.invoiceNumber]);
+  }, [activeTab, selectedArticleSlug, invoice.invoiceNumber]);
 
   // List of saved historical invoices
   const [savedInvoices, setSavedInvoices] = useState<Invoice[]>(() => {
@@ -146,6 +194,7 @@ export default function App() {
     if (sample) {
       setInvoice({ ...sample, id: `inv-${Date.now()}` });
       setActiveTab('editor');
+      window.location.hash = '';
     }
   };
 
@@ -153,6 +202,7 @@ export default function App() {
   const handleNewInvoice = () => {
     setInvoice(CREATE_NEW_INVOICE_TEMPLATE());
     setActiveTab('editor');
+    window.location.hash = '';
   };
 
   // Delete invoice from history
@@ -190,7 +240,12 @@ export default function App() {
   const handleSelectInvoice = (selected: Invoice) => {
     setInvoice(selected);
     setActiveTab('editor');
+    window.location.hash = '';
   };
+
+  const currentArticle = selectedArticleSlug
+    ? ARTICLES_DATA.find((a) => a.slug === selectedArticleSlug) || ARTICLES_DATA[0]
+    : null;
 
   return (
     <div className="min-h-screen bg-slate-100/70 text-slate-900 font-sans flex flex-col relative">
@@ -198,7 +253,23 @@ export default function App() {
       {/* Top Header Navbar */}
       <InvoiceHeader
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          if (tab === 'guides') {
+            setSelectedArticleSlug(null);
+            window.location.hash = '#guides';
+          } else if (tab === 'about') {
+            window.location.hash = '#about-us';
+          } else if (tab === 'contact') {
+            window.location.hash = '#contact-us';
+          } else if (tab === 'dashboard') {
+            window.location.hash = '#dashboard';
+          } else if (tab === 'history') {
+            window.location.hash = '#history';
+          } else {
+            window.location.hash = '';
+          }
+        }}
         invoice={invoice}
         setInvoice={setInvoice}
         onSaveInvoice={handleSaveInvoice}
@@ -213,7 +284,7 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         
-        {/* VIEW 1: CLEAN WYSIWYG INVOICE EDITOR & GUIDE */}
+        {/* VIEW 1: CLEAN WYSIWYG INVOICE EDITOR */}
         {activeTab === 'editor' && (
           <>
             <InvoiceEditor 
@@ -229,21 +300,73 @@ export default function App() {
               onLoadSample={handleLoadSample}
             />
             
-            {/* SEO & Educational Knowledge Center below the editor */}
+            {/* SEO & Invoicing Quick Reference */}
             <InvoicingKnowledgeHub />
           </>
         )}
 
-        {/* VIEW 2: BUSINESS PERFORMANCE DASHBOARD */}
+        {/* VIEW 2: DEDICATED ARTICLES & INVOICING GUIDES */}
+        {activeTab === 'guides' && (
+          <div>
+            {currentArticle ? (
+              <ArticleView
+                article={currentArticle}
+                onBack={handleBackToArticles}
+                onSelectArticle={handleSelectArticle}
+                onOpenEditor={() => {
+                  setActiveTab('editor');
+                  window.location.hash = '';
+                }}
+              />
+            ) : (
+              <ArticleList
+                onSelectArticle={handleSelectArticle}
+                onOpenEditor={() => {
+                  setActiveTab('editor');
+                  window.location.hash = '';
+                }}
+              />
+            )}
+          </div>
+        )}
+
+        {/* VIEW 3: ABOUT US TRANSPARENCY PAGE (E-E-A-T) */}
+        {activeTab === 'about' && (
+          <AboutUsPage
+            onOpenEditor={() => {
+              setActiveTab('editor');
+              window.location.hash = '';
+            }}
+            onOpenContact={() => {
+              setActiveTab('contact');
+              window.location.hash = '#contact-us';
+            }}
+          />
+        )}
+
+        {/* VIEW 4: CONTACT & SUPPORT DESK */}
+        {activeTab === 'contact' && (
+          <ContactUsPage
+            onOpenEditor={() => {
+              setActiveTab('editor');
+              window.location.hash = '';
+            }}
+          />
+        )}
+
+        {/* VIEW 5: BUSINESS PERFORMANCE DASHBOARD */}
         {activeTab === 'dashboard' && (
           <div className="pb-16">
             <div className="mb-4 flex items-center justify-between">
               <button
                 type="button"
-                onClick={() => setActiveTab('editor')}
+                onClick={() => {
+                  setActiveTab('editor');
+                  window.location.hash = '';
+                }}
                 className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
               >
-                ← Back to Invoice Editor
+                ← Back to Invoice Maker
               </button>
             </div>
             <InvoiceDashboard
@@ -255,16 +378,19 @@ export default function App() {
           </div>
         )}
 
-        {/* VIEW 3: SAVED INVOICES HISTORY */}
+        {/* VIEW 6: SAVED INVOICES HISTORY */}
         {activeTab === 'history' && (
           <div className="pb-16">
             <div className="mb-4 flex items-center justify-between">
               <button
                 type="button"
-                onClick={() => setActiveTab('editor')}
+                onClick={() => {
+                  setActiveTab('editor');
+                  window.location.hash = '';
+                }}
                 className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
               >
-                ← Back to Invoice Editor
+                ← Back to Invoice Maker
               </button>
             </div>
             <InvoiceHistory

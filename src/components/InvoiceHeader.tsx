@@ -7,18 +7,23 @@ import {
   Plus, 
   Sparkles, 
   Save, 
-  CheckCircle2,
-  HelpCircle,
-  ShieldCheck,
-  LayoutDashboard,
-  BarChart3
+  CheckCircle2, 
+  HelpCircle, 
+  ShieldCheck, 
+  LayoutDashboard, 
+  BarChart3,
+  BookOpen,
+  Users,
+  MessageSquare
 } from 'lucide-react';
 import { Invoice } from '../types';
 import { PolicyTab } from './PolicyModal';
 
+export type MainNavTab = 'editor' | 'dashboard' | 'history' | 'guides' | 'about' | 'contact';
+
 interface InvoiceHeaderProps {
-  activeTab: 'editor' | 'dashboard' | 'history';
-  setActiveTab: (tab: 'editor' | 'dashboard' | 'history') => void;
+  activeTab: MainNavTab;
+  setActiveTab: (tab: MainNavTab) => void;
   invoice: Invoice;
   setInvoice: React.Dispatch<React.SetStateAction<Invoice>>;
   onSaveInvoice: () => void;
@@ -56,31 +61,38 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
 
           <div className="flex items-center gap-3 sm:gap-4 font-semibold text-slate-300">
             <button 
+              onClick={() => setActiveTab('guides')}
+              className="hover:text-blue-400 transition-colors cursor-pointer"
+            >
+              Invoicing Guides
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => setActiveTab('about')}
+              className="hover:text-blue-400 transition-colors cursor-pointer hidden sm:inline"
+            >
+              About Us
+            </button>
+            <span className="hidden sm:inline">•</span>
+            <button 
               onClick={() => onOpenPolicy('privacy')}
-              className="hover:text-blue-400 transition-colors"
+              className="hover:text-blue-400 transition-colors cursor-pointer"
             >
               Privacy
             </button>
             <span>•</span>
             <button 
               onClick={() => onOpenPolicy('terms')}
-              className="hover:text-blue-400 transition-colors"
+              className="hover:text-blue-400 transition-colors cursor-pointer"
             >
               Terms
             </button>
             <span>•</span>
             <button 
-              onClick={() => onOpenPolicy('guide')}
-              className="hover:text-blue-400 transition-colors hidden sm:inline"
+              onClick={() => setActiveTab('contact')}
+              className="hover:text-blue-400 transition-colors cursor-pointer"
             >
-              Invoicing Guide
-            </button>
-            <span className="hidden sm:inline">•</span>
-            <button 
-              onClick={() => onOpenPolicy('contact')}
-              className="hover:text-blue-400 transition-colors"
-            >
-              Help
+              Contact
             </button>
           </div>
         </div>
@@ -113,7 +125,7 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
             </div>
           </div>
 
-          {/* Center Navigation Tabs (Editor, Dashboard, History) */}
+          {/* Center Navigation Tabs */}
           <nav className="hidden md:flex items-center bg-slate-100 p-1 rounded-xl gap-1">
             <button
               type="button"
@@ -125,7 +137,20 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>Invoice Editor</span>
+              <span>Invoice Maker</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('guides')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                activeTab === 'guides'
+                  ? 'bg-white text-blue-600 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+              <span>Guides & Tax Hub</span>
             </button>
 
             <button
@@ -159,6 +184,19 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
                 </span>
               )}
             </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('about')}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                activeTab === 'about'
+                  ? 'bg-white text-blue-600 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+              }`}
+            >
+              <Users className="w-3.5 h-3.5" />
+              <span>About</span>
+            </button>
           </nav>
 
           {/* Right Action Bar */}
@@ -166,6 +204,17 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
             
             {/* Mobile Tab Icons */}
             <div className="flex md:hidden items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setActiveTab('guides')}
+                className={`p-2 rounded-lg text-xs font-semibold cursor-pointer ${
+                  activeTab === 'guides' ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-100'
+                }`}
+                title="Invoicing Guides"
+              >
+                <BookOpen className="w-4 h-4" />
+              </button>
+
               <button
                 type="button"
                 onClick={() => setActiveTab('dashboard')}
@@ -199,7 +248,7 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({
               <span className="hidden sm:inline">New Invoice</span>
             </button>
 
-            {/* Download / Print Button (Quick Access in Nav on mobile/desktop) */}
+            {/* Download / Print Button */}
             <button
               type="button"
               onClick={onPrintInvoice}
