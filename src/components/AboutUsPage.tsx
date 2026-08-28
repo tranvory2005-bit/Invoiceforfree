@@ -12,6 +12,7 @@ import {
   Globe2 
 } from 'lucide-react';
 import { GoogleAd } from './GoogleAd';
+import { SeoBreadcrumbs } from './SeoBreadcrumbs';
 
 interface AboutUsPageProps {
   onOpenEditor: () => void;
@@ -24,6 +25,19 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({
 }) => {
   return (
     <div className="max-w-4xl mx-auto pb-20">
+      {/* Semantic Breadcrumbs */}
+      <div className="mb-6">
+        <SeoBreadcrumbs
+          items={[
+            { name: 'About Us', url: '#about-us' },
+          ]}
+          onNavigate={(url) => {
+            if (url === '#editor') {
+              onOpenEditor();
+            }
+          }}
+        />
+      </div>
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto mb-12">

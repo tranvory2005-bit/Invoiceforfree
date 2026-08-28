@@ -14,6 +14,7 @@ import { SeoFooter } from './components/SeoFooter';
 import { InvoicingKnowledgeHub } from './components/InvoicingKnowledgeHub';
 import { PolicyModal, PolicyTab } from './components/PolicyModal';
 import { CookieBanner } from './components/CookieBanner';
+import { updatePageSeo } from './utils/seo';
 
 const STORAGE_KEY_SAVED_INVOICES = 'invoice_generator_saved_list_v1';
 const STORAGE_KEY_CURRENT_INVOICE = 'invoice_generator_current_draft_v1';
@@ -102,27 +103,76 @@ export default function App() {
     return SAMPLE_INVOICES.web_design;
   });
 
-  // Dynamic document title & meta update
+  // Dynamic SEO Meta & JSON-LD updates on navigation
   useEffect(() => {
     if (activeTab === 'guides') {
       if (selectedArticleSlug) {
         const found = ARTICLES_DATA.find((a) => a.slug === selectedArticleSlug);
-        document.title = found ? `${found.title} | InvoicesForFree` : 'Invoicing Guides & Articles | InvoicesForFree';
+        if (found) {
+          updatePageSeo({
+            title: `${found.title} | InvoicesForFree Invoicing Guide`,
+            description: found.summary,
+            canonicalUrl: `https://invoicesforfree.com/#guide/${found.slug}`,
+            ogType: 'article',
+            articleData: found,
+            breadcrumbs: [
+              { name: 'Guides & Knowledge Hub', url: '/#guides' },
+              { name: found.title, url: `/#guide/${found.slug}` },
+            ],
+          });
+        } else {
+          updatePageSeo({
+            title: 'Invoicing Guides & Articles | InvoicesForFree',
+            description: 'Read expert invoicing guides, tax compliance blueprints, payment terms, and cashflow strategies for freelancers and businesses.',
+            canonicalUrl: 'https://invoicesforfree.com/#guides',
+            breadcrumbs: [{ name: 'Guides & Knowledge Hub', url: '/#guides' }],
+          });
+        }
       } else {
-        document.title = 'Invoicing Guides, Tax Compliance & Cashflow Center | InvoicesForFree';
+        updatePageSeo({
+          title: 'Invoicing Guides, Tax Compliance & Cashflow Center | InvoicesForFree',
+          description: 'Explore comprehensive invoicing guides covering US Sales Tax, European VAT, GST, Net 30 payment terms, and industry-specific billing templates.',
+          canonicalUrl: 'https://invoicesforfree.com/#guides',
+          breadcrumbs: [{ name: 'Guides & Knowledge Hub', url: '/#guides' }],
+        });
       }
     } else if (activeTab === 'about') {
-      document.title = 'About InvoicesForFree — Privacy-First Free Invoicing Platform';
+      updatePageSeo({
+        title: 'About Us — InvoicesForFree | Privacy-First 100% Free Invoicing Suite',
+        description: 'Learn about InvoicesForFree, our founding mission to provide completely free, watermark-free PDF invoicing tools, and our local client-side privacy architecture.',
+        canonicalUrl: 'https://invoicesforfree.com/#about-us',
+        breadcrumbs: [{ name: 'About Us', url: '/#about-us' }],
+      });
     } else if (activeTab === 'contact') {
-      document.title = 'Contact Support & Help Desk | InvoicesForFree';
+      updatePageSeo({
+        title: 'Contact Support & Help Desk | InvoicesForFree',
+        description: 'Contact the InvoicesForFree support and editorial team. Submit questions, bug reports, feature requests, or inquiries.',
+        canonicalUrl: 'https://invoicesforfree.com/#contact-us',
+        breadcrumbs: [{ name: 'Contact Support', url: '/#contact-us' }],
+      });
     } else if (activeTab === 'dashboard') {
-      document.title = 'Business Performance Dashboard | InvoicesForFree';
+      updatePageSeo({
+        title: 'Business Performance & Invoicing Dashboard | InvoicesForFree',
+        description: 'Track your total invoiced revenue, paid balances, outstanding accounts receivable, and client breakdown with visual charts and metrics.',
+        canonicalUrl: 'https://invoicesforfree.com/#dashboard',
+        breadcrumbs: [{ name: 'Business Dashboard', url: '/#dashboard' }],
+      });
     } else if (activeTab === 'history') {
-      document.title = 'Saved Invoices History | InvoicesForFree';
-    } else if (invoice.invoiceNumber) {
-      document.title = `Invoice #${invoice.invoiceNumber} | InvoicesForFree — Free Invoice Generator`;
+      updatePageSeo({
+        title: 'Saved Invoices & Draft History | InvoicesForFree',
+        description: 'Manage and review your saved client invoices, duplicate previous drafts, update payment status, and export PDF documents.',
+        canonicalUrl: 'https://invoicesforfree.com/#history',
+        breadcrumbs: [{ name: 'Invoice History', url: '/#history' }],
+      });
     } else {
-      document.title = 'InvoicesForFree — 100% Free Online Invoice Generator & PDF Maker';
+      updatePageSeo({
+        title: invoice.invoiceNumber 
+          ? `Invoice #${invoice.invoiceNumber} | InvoicesForFree — 100% Free Online Invoice Generator`
+          : 'InvoicesForFree — 100% Free Online Invoice Generator & PDF Maker',
+        description: 'InvoicesForFree is the #1 free online invoice generator. Create, customize, print, and download professional PDF invoices in seconds. No signup, no watermark, 100% free with logo branding, multi-currency, and tax calculation.',
+        keywords: 'invoicesforfree, invoices for free, free invoice generator, invoice maker, create invoice online, free pdf invoice maker, invoice template, contractor billing, small business invoice creator',
+        canonicalUrl: 'https://invoicesforfree.com/',
+      });
     }
   }, [activeTab, selectedArticleSlug, invoice.invoiceNumber]);
 

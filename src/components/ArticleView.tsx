@@ -1,6 +1,7 @@
 import React from 'react';
 import { Article } from '../data/articles';
 import { GoogleAd } from './GoogleAd';
+import { SeoBreadcrumbs } from './SeoBreadcrumbs';
 import { 
   ArrowLeft, 
   Calendar, 
@@ -29,6 +30,8 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   onSelectArticle,
   onOpenEditor
 }) => {
+  const [copied, setCopied] = React.useState(false);
+
   const handleScrollTo = (anchor: string) => {
     const el = document.getElementById(anchor);
     if (el) {
@@ -45,12 +48,28 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
       }).catch(() => {});
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert('Article link copied to clipboard!');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
     }
   };
 
   return (
-    <article className="max-w-4xl mx-auto pb-20">
+    <article className="max-w-4xl mx-auto pb-20" itemScope itemType="https://schema.org/TechArticle">
+      {/* Semantic Breadcrumbs */}
+      <div className="mb-4">
+        <SeoBreadcrumbs
+          items={[
+            { name: 'Guides & Knowledge Hub', url: '#guides' },
+            { name: article.title, url: `#guide/${article.slug}` },
+          ]}
+          onNavigate={(url) => {
+            if (url === '#guides') {
+              onBack();
+            }
+          }}
+        />
+      </div>
+
       {/* Top Breadcrumb & Navigation */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <button
@@ -66,8 +85,8 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             onClick={handleShare}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 transition-colors cursor-pointer shadow-xs"
           >
-            <Share2 className="w-3.5 h-3.5" />
-            <span>Share Guide</span>
+            {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5" />}
+            <span>{copied ? 'Link Copied!' : 'Share Guide'}</span>
           </button>
           
           <button
@@ -84,33 +103,35 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
       <header className="mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold mb-4 uppercase tracking-wider">
           <BookOpen className="w-3.5 h-3.5" />
-          <span>{article.category}</span>
+          <span itemProp="articleSection">{article.category}</span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4" itemProp="headline">
           {article.title}
         </h1>
 
-        <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed mb-6">
+        <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed mb-6" itemProp="description">
           {article.subtitle}
         </p>
 
         {/* Metadata & Author Card */}
         <div className="flex flex-wrap items-center gap-6 p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" itemProp="author" itemScope itemType="https://schema.org/Person">
             <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
               {article.author.avatar}
             </div>
             <div>
-              <div className="text-sm font-bold text-slate-900">{article.author.name}</div>
-              <div className="text-xs text-slate-500">{article.author.role}</div>
+              <div className="text-sm font-bold text-slate-900" itemProp="name">{article.author.name}</div>
+              <div className="text-xs text-slate-500" itemProp="jobTitle">{article.author.role}</div>
             </div>
           </div>
 
           <div className="flex items-center gap-4 text-xs text-slate-500 border-t sm:border-t-0 sm:border-l border-slate-200 pt-3 sm:pt-0 sm:pl-6 w-full sm:w-auto">
             <div className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-slate-400" />
-              <span>Published {new Date(article.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+              <time itemProp="datePublished" dateTime={article.publishDate}>
+                Published {new Date(article.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              </time>
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-slate-400" />
@@ -142,7 +163,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             <button
               key={idx}
               onClick={() => handleScrollTo(item.anchor)}
-              className="text-left text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1.5 py-1 px-2 rounded hover:bg-slate-50 transition-colors"
+              className="text-left text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1.5 py-1 px-2 rounded hover:bg-slate-50 transition-colors cursor-pointer"
             >
               <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <span className="truncate">{item.title}</span>
@@ -152,7 +173,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
       </div>
 
       {/* Main Editorial Content Body */}
-      <div className="space-y-10 text-slate-800 leading-relaxed text-base">
+      <div className="space-y-10 text-slate-800 leading-relaxed text-base" itemProp="articleBody">
         {article.sections.map((section, idx) => (
           <section key={idx} id={section.anchor} className="scroll-mt-24 space-y-4">
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight border-b border-slate-100 pb-2">

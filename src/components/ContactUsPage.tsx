@@ -13,6 +13,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 import { GoogleAd } from './GoogleAd';
+import { SeoBreadcrumbs } from './SeoBreadcrumbs';
 
 interface ContactUsPageProps {
   onOpenEditor: () => void;
@@ -55,6 +56,19 @@ export const ContactUsPage: React.FC<ContactUsPageProps> = ({ onOpenEditor }) =>
 
   return (
     <div className="max-w-4xl mx-auto pb-20">
+      {/* Semantic Breadcrumbs */}
+      <div className="mb-6">
+        <SeoBreadcrumbs
+          items={[
+            { name: 'Contact & Support', url: '#contact' },
+          ]}
+          onNavigate={(url) => {
+            if (url === '#editor') {
+              onOpenEditor();
+            }
+          }}
+        />
+      </div>
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto mb-12">

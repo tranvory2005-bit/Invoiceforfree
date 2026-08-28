@@ -14,14 +14,51 @@ import {
   Code2, 
   Wrench,
   ChevronRight,
+  ChevronDown,
   ShieldCheck,
   Percent,
-  Receipt
+  Receipt,
+  ArrowRight,
+  Sparkles,
+  Camera,
+  Layers
 } from 'lucide-react';
 import { GoogleAd } from './GoogleAd';
 
-export const InvoicingKnowledgeHub: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<'guides' | 'countries' | 'terms' | 'industries' | 'tax'>('guides');
+interface InvoicingKnowledgeHubProps {
+  onLoadSample?: (templateKey: string) => void;
+}
+
+export const InvoicingKnowledgeHub: React.FC<InvoicingKnowledgeHubProps> = ({ onLoadSample }) => {
+  const [activeCategory, setActiveCategory] = useState<'guides' | 'countries' | 'terms' | 'industries' | 'tax' | 'faq'>('guides');
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  const faqs = [
+    {
+      q: 'Is InvoicesForFree really 100% free with no watermarks?',
+      a: 'Yes! InvoicesForFree is completely free forever. We do not place watermarks on your exported PDF invoices, require credit card entries, or lock features behind premium tiers.'
+    },
+    {
+      q: 'Are my financial records, customer addresses, and drafts kept private?',
+      a: 'Absolutely. We operate a client-side, local-first architecture. All draft inputs, invoice line items, tax IDs, and saved customer profiles remain safely stored inside your browser’s localStorage. Data is never uploaded to external advertising or tracking servers.'
+    },
+    {
+      q: 'What is the difference between Net 30, Net 14, and Due Upon Receipt?',
+      a: 'Due Upon Receipt means payment is expected immediately after invoice delivery. Net 14 gives the client 14 calendar days to pay, and Net 30 provides 30 calendar days. For small businesses and freelancers, Net 14 or Net 15 is recommended to maintain healthy cashflow.'
+    },
+    {
+      q: 'How does the Reverse Charge VAT rule work on international EU invoices?',
+      a: 'When an EU business sells B2B services or goods to a VAT-registered business in another EU member state, the seller does not charge local VAT. Instead, the seller records both VAT IDs and states "Reverse charge: VAT payable by the recipient" on the invoice.'
+    },
+    {
+      q: 'Can I add my business logo and change currency symbols?',
+      a: 'Yes. In the Invoice Editor, click "Upload Logo" to add your PNG, JPG, or SVG company emblem. You can switch between USD ($), EUR (€), GBP (£), CAD ($), AUD ($), JPY (¥), CHF, and more with one click.'
+    },
+    {
+      q: 'What should I do if a client is late paying an invoice?',
+      a: 'Send a polite payment reminder 3 days before the due date, followed by an overdue notice on day 1 post-due date. State any late fees agreed in the initial contract, reattach the original PDF invoice, and provide direct payment links for swift settlement.'
+    }
+  ];
 
   return (
     <section className="mt-12 bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden print:hidden text-slate-800">
@@ -45,7 +82,7 @@ export const InvoicingKnowledgeHub: React.FC = () => {
         <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-slate-700/60">
           <button
             onClick={() => setActiveCategory('guides')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeCategory === 'guides'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300'
@@ -57,7 +94,7 @@ export const InvoicingKnowledgeHub: React.FC = () => {
 
           <button
             onClick={() => setActiveCategory('countries')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeCategory === 'countries'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300'
@@ -69,19 +106,19 @@ export const InvoicingKnowledgeHub: React.FC = () => {
 
           <button
             onClick={() => setActiveCategory('terms')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeCategory === 'terms'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300'
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span>Payment Terms & Getting Paid</span>
+            <span>Payment Terms & Cashflow</span>
           </button>
 
           <button
             onClick={() => setActiveCategory('industries')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeCategory === 'industries'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300'
@@ -93,14 +130,26 @@ export const InvoicingKnowledgeHub: React.FC = () => {
 
           <button
             onClick={() => setActiveCategory('tax')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeCategory === 'tax'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300'
             }`}
           >
             <Percent className="w-4 h-4" />
-            <span>Calculations & Discounts</span>
+            <span>Calculations & Formulas</span>
+          </button>
+
+          <button
+            onClick={() => setActiveCategory('faq')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              activeCategory === 'faq'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300'
+            }`}
+          >
+            <HelpCircle className="w-4 h-4" />
+            <span>Invoicing FAQs</span>
           </button>
         </div>
       </div>
@@ -111,13 +160,22 @@ export const InvoicingKnowledgeHub: React.FC = () => {
         {/* SECTION 1: INVOICE FUNDAMENTALS */}
         {activeCategory === 'guides' && (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
-                The Anatomy of a Legally Compliant Professional Invoice
-              </h3>
-              <p className="text-xs text-slate-500">
-                Ensure your billing documents meet commercial standards to avoid payment delays or tax scrutiny.
-              </p>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 mb-1">
+                  The Anatomy of a Legally Compliant Professional Invoice
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Ensure your billing documents meet commercial standards to avoid payment delays or tax scrutiny.
+                </p>
+              </div>
+              <a
+                href="#guide/how-to-write-a-professional-invoice"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800"
+              >
+                <span>Read Full Step-by-Step Blueprint</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -125,7 +183,7 @@ export const InvoicingKnowledgeHub: React.FC = () => {
                 <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
                   1
                 </div>
-                <h4 className="font-bold text-sm text-slate-900">Header & Identity</h4>
+                <h4 className="font-bold text-sm text-slate-900">Header & Business Identity</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Clear title (&quot;INVOICE&quot;), your registered business name, logo, physical address, business phone, email, and tax identification number (EIN, VAT, or ABN).
                 </p>
@@ -135,7 +193,7 @@ export const InvoicingKnowledgeHub: React.FC = () => {
                 <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs">
                   2
                 </div>
-                <h4 className="font-bold text-sm text-slate-900">Unique Tracking Data</h4>
+                <h4 className="font-bold text-sm text-slate-900">Unique Tracking & Dates</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Sequential invoice numbering (e.g., INV-2026-0042), purchase order (PO) reference, issue date, and explicit payment due date.
                 </p>
@@ -145,7 +203,7 @@ export const InvoicingKnowledgeHub: React.FC = () => {
                 <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">
                   3
                 </div>
-                <h4 className="font-bold text-sm text-slate-900">Clear Itemization</h4>
+                <h4 className="font-bold text-sm text-slate-900">Clear Itemization & Terms</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Itemized list of services or products, unit quantities, hourly or fixed rates, applicable subtotal, line-item discounts, and calculated taxes.
                 </p>
@@ -182,13 +240,22 @@ export const InvoicingKnowledgeHub: React.FC = () => {
         {/* SECTION 2: GLOBAL TAX & COMPLIANCE */}
         {activeCategory === 'countries' && (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
-                International Invoicing & Tax Rules by Country
-              </h3>
-              <p className="text-xs text-slate-500">
-                Tax requirements vary significantly across jurisdictions. Review key guidelines below:
-              </p>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 mb-1">
+                  International Invoicing & Tax Rules by Country
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Tax requirements vary significantly across jurisdictions. Review key guidelines below:
+                </p>
+              </div>
+              <a
+                href="#guide/international-tax-invoicing-guide"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800"
+              >
+                <span>Read International Tax Guide</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -260,8 +327,8 @@ export const InvoicingKnowledgeHub: React.FC = () => {
                   In Australia, invoices over $1,000 AUD must clearly state &quot;Tax Invoice&quot; and include the seller&apos;s Australian Business Number (ABN). In Canada, businesses registered for GST/HST must display their 9-digit CRA Business Number.
                 </p>
                 <ul className="text-xs text-slate-500 list-disc list-inside space-y-1">
-                  <li>In Canada, differentiate between federal GST (5%), provincial PST, or combined HST (13-15%).</li>
-                  <li>In Australia, clearly indicate whether line items are inclusive or exclusive of 10% GST.</li>
+                  <li>Australia GST: 10% standard rate on taxable supplies.</li>
+                  <li>Canada: 5% Federal GST combined with Provincial Sales Tax (PST) or Harmonized Sales Tax (HST).</li>
                 </ul>
               </div>
 
@@ -269,33 +336,42 @@ export const InvoicingKnowledgeHub: React.FC = () => {
           </div>
         )}
 
-        {/* SECTION 3: PAYMENT TERMS & GETTING PAID */}
+        {/* SECTION 3: PAYMENT TERMS */}
         {activeCategory === 'terms' && (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
-                Standard Business Payment Terms & Cash Flow Protection
-              </h3>
-              <p className="text-xs text-slate-500">
-                Choosing the right payment terms ensures predictable cash flow and minimizes past-due client balances.
-              </p>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 mb-1">
+                  Standard Commercial Payment Terms Explained
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Selecting the right payment terms improves cashflow predictability and reduces overdue receivables.
+                </p>
+              </div>
+              <a
+                href="#guide/payment-terms-and-cashflow-management"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800"
+              >
+                <span>Read Payment Terms Guide</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <h4 className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-blue-600" />
                   Due Upon Receipt
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Payment is expected immediately upon delivery of invoice. Best suited for freelancers, digital service providers, one-time projects, and new clients without established credit history.
+                  Payment is expected immediately upon delivery of the invoice. Best for one-off freelance tasks, digital deliverables, or service completion.
                 </p>
               </div>
 
               <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <h4 className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-indigo-600" />
-                  Net 15 & Net 30
+                  Net 15 / Net 30
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   The client has 15 or 30 calendar days from the invoice date to remit payment. Net 30 is standard in corporate B2B contracts, but Net 15 is recommended for small businesses to accelerate receivables.
@@ -343,54 +419,112 @@ export const InvoicingKnowledgeHub: React.FC = () => {
         {/* SECTION 4: INDUSTRY SPECIFIC TEMPLATES */}
         {activeCategory === 'industries' && (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
-                Industry-Specific Invoicing Practices
-              </h3>
-              <p className="text-xs text-slate-500">
-                Different industries require tailored descriptions and contract terms:
-              </p>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 mb-1">
+                  Industry-Specific Invoicing Practices & Pre-filled Templates
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Different industries require tailored itemization and contract terms. Click any template to load it into the editor:
+                </p>
+              </div>
+              <a
+                href="#guide/free-invoice-templates-by-industry"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800"
+              >
+                <span>Read Industry Templates Guide</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                  <Code2 className="w-4 h-4 text-blue-600" />
-                  Software Development & IT Services
-                </h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Specify sprint milestones, ticket IDs, hours logged, repository handoffs, and staging server deployments. State intellectual property transfer terms upon final payment completion.
-                </p>
+              
+              {/* Web Design & IT */}
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between space-y-3">
+                <div>
+                  <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2 mb-1">
+                    <Code2 className="w-4 h-4 text-blue-600" />
+                    Web Design & IT Services
+                  </h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Specify sprint milestones, ticket IDs, hours logged, repository handoffs, and staging server deployments. State intellectual property transfer terms upon final payment completion.
+                  </p>
+                </div>
+                {onLoadSample && (
+                  <button
+                    onClick={() => onLoadSample('web_design')}
+                    className="self-start inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 pt-2 border-t border-slate-200 w-full"
+                  >
+                    <span>Load Web Design Sample</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
 
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-pink-600" />
-                  Graphic Design, Video & Creative Agencies
-                </h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Detail revision rounds included (e.g., &quot;Includes up to 2 revision cycles&quot;), media format deliverables (vector EPS, 4K MP4), and commercial usage/licensing terms.
-                </p>
+              {/* Graphic Design */}
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between space-y-3">
+                <div>
+                  <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2 mb-1">
+                    <Palette className="w-4 h-4 text-pink-600" />
+                    Graphic Design & Creative Agency
+                  </h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Detail revision rounds included (e.g., &quot;Includes up to 2 revision cycles&quot;), media format deliverables (vector EPS, 4K MP4), and commercial usage/licensing terms.
+                  </p>
+                </div>
+                {onLoadSample && (
+                  <button
+                    onClick={() => onLoadSample('photography')}
+                    className="self-start inline-flex items-center gap-1.5 text-xs font-bold text-pink-600 hover:text-pink-800 pt-2 border-t border-slate-200 w-full"
+                  >
+                    <span>Load Creative Media Sample</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
 
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 text-indigo-600" />
-                  Consulting & Professional Services
-                </h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Break down consulting hourly rates, strategy workshops, report deliverables, and pre-approved travel/lodging expense reimbursements with attached receipts.
-                </p>
+              {/* Consulting */}
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between space-y-3">
+                <div>
+                  <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2 mb-1">
+                    <Briefcase className="w-4 h-4 text-indigo-600" />
+                    Consulting & Strategy
+                  </h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Break down consulting hourly rates, strategy workshops, report deliverables, and pre-approved travel/lodging expense reimbursements with attached receipts.
+                  </p>
+                </div>
+                {onLoadSample && (
+                  <button
+                    onClick={() => onLoadSample('consulting')}
+                    className="self-start inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 pt-2 border-t border-slate-200 w-full"
+                  >
+                    <span>Load Consulting Sample</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
 
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                  <Wrench className="w-4 h-4 text-amber-600" />
-                  Contractors, Trades & Home Services
-                </h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Itemize labor hours separately from physical raw materials and equipment rentals. Reference permit numbers and warranty terms on completed craftsmanship.
-                </p>
+              {/* Construction & Trades */}
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between space-y-3">
+                <div>
+                  <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2 mb-1">
+                    <Wrench className="w-4 h-4 text-amber-600" />
+                    Contractors & Construction
+                  </h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Itemize labor hours separately from physical raw materials and equipment rentals. Reference permit numbers and warranty terms on completed craftsmanship.
+                  </p>
+                </div>
+                {onLoadSample && (
+                  <button
+                    onClick={() => onLoadSample('construction')}
+                    className="self-start inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-800 pt-2 border-t border-slate-200 w-full"
+                  >
+                    <span>Load Construction Sample</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -448,6 +582,58 @@ export const InvoicingKnowledgeHub: React.FC = () => {
                   Final balance payable by the client including all line items, adjustments, and shipping fees.
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* SECTION 6: INVOICING FAQS */}
+        {activeCategory === 'faq' && (
+          <div className="space-y-4" itemScope itemType="https://schema.org/FAQPage">
+            <div>
+              <h3 className="text-lg font-bold text-slate-900 mb-1">
+                Frequently Asked Invoicing & Billing Questions
+              </h3>
+              <p className="text-xs text-slate-500">
+                Quick answers regarding invoicing legalities, payment collection, client privacy, and currency handling.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {faqs.map((faq, idx) => {
+                const isOpen = openFaqIndex === idx;
+                return (
+                  <div
+                    key={idx}
+                    className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50"
+                    itemScope
+                    itemProp="mainEntity"
+                    itemType="https://schema.org/Question"
+                  >
+                    <button
+                      onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                      className="w-full p-4 text-left flex items-center justify-between gap-4 font-bold text-sm text-slate-900 hover:bg-slate-100/70 transition-colors cursor-pointer"
+                    >
+                      <span itemProp="name">{faq.q}</span>
+                      {isOpen ? (
+                        <ChevronDown className="w-4 h-4 text-blue-600 shrink-0" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+                      )}
+                    </button>
+
+                    {isOpen && (
+                      <div
+                        className="px-4 pb-4 text-xs text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3"
+                        itemScope
+                        itemProp="acceptedAnswer"
+                        itemType="https://schema.org/Answer"
+                      >
+                        <div itemProp="text">{faq.a}</div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

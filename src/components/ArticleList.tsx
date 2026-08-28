@@ -15,6 +15,7 @@ import {
   Globe
 } from 'lucide-react';
 import { GoogleAd } from './GoogleAd';
+import { SeoBreadcrumbs } from './SeoBreadcrumbs';
 
 interface ArticleListProps {
   onSelectArticle: (slug: string) => void;
@@ -41,6 +42,19 @@ export const ArticleList: React.FC<ArticleListProps> = ({
 
   return (
     <div className="max-w-6xl mx-auto pb-20">
+      {/* Semantic Breadcrumbs */}
+      <div className="mb-6">
+        <SeoBreadcrumbs
+          items={[
+            { name: 'Guides & Knowledge Hub', url: '#guides' },
+          ]}
+          onNavigate={(url) => {
+            if (url === '#editor') {
+              onOpenEditor();
+            }
+          }}
+        />
+      </div>
       
       {/* Hero Section */}
       <div className="text-center max-w-3xl mx-auto mb-12">

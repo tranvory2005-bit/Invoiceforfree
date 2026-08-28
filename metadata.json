@@ -1,6 +1,6 @@
 {
-  "name": "InvoicesForFree — 100% Free Online Invoice Generator",
-  "description": "Create, customize, and download professional PDF invoices instantly with live previews, custom branding, multi-currency support, business dashboard, and comprehensive tax guides.",
+  "name": "InvoicesForFree — 100% Free Online Invoice Generator & PDF Maker",
+  "description": "InvoicesForFree is the #1 free online invoice generator. Create, customize, print, and download professional PDF invoices in seconds. No signup, no watermark, 100% free with logo branding, multi-currency, and tax calculation.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
